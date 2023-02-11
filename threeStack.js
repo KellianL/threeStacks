@@ -1,35 +1,47 @@
 class ThreeStack {
   constructor() {
     this.stack = [];
-    this.nbOfItemsInEachStacks = [0, 0, 0];
-    Object.seal(this.nbOfItemsInEachStacks);
   }
 
+  /**
+   * Push the object to the stack specified in argument .
+   * @param stackname - The stack you want to push to.
+   * @param object - The object you want to push to the stack.
+   */
   push(stackname, object) {
-    const stackid = stackname - 1;
-    this.stack[stackid + this.nbOfItemsInEachStacks[stackid] * 3] = object;
-    this.nbOfItemsInEachStacks[stackid]++;
+    const temp = this.countStackItems(stackname - 1);
+    this.stack[(stackname - 1) + temp[0] * 3] = object;
   }
+  /**
+   * The function takes a stackname as an argument and returns the value of the top item in the stack
+   * @param stackname - The stack you want to pop from.
+   * @returns The value of the item being popped off the stack.
+   */
   pop(stackname) {
-    const stackid = stackname - 1;
-    const nbOfItemInTheStack = this.nbOfItemsInEachStacks[stackid];
-    if (nbOfItemInTheStack <= 0 || stackname >3 || stackname < 0) {
+    const temp = this.countStackItems(stackname - 1);
+    if (temp[0] <= 0 || stackname >3 || stackname < 0) {
       throw new Error("Stack empty or stackname incorrect");
     }
-    const valueindex = stackid + (nbOfItemInTheStack - 1) * 3;
-    const value = this.stack[valueindex];
-    delete this.stack[valueindex];
-    this.nbOfItemsInEachStacks[stackid]--;
-    for (var i = this.stack.length - 1; i >= 0; i--){
-      if(typeof this.stack[i] !== 'string'){
-        this.stack.splice(i);
-      }
-      else{
-        break;
-      }
-    }
+    const value = this.stack[temp[1]];
+    delete this.stack[temp[1]];
     return value;
-    
+  }
+  /**
+   * It returns the number of items in the stack and the index of the last item in the stack
+   * @param stackid - the index of the stack in the stack array
+   */
+  countStackItems(stackid){
+    const len = this.stack.length;
+    let nbOfItemInTheStack = 0;
+    let valueindex ;
+    for (let i = stackid; i <= len; i=stackid + nbOfItemInTheStack *3 ){
+      if(typeof this.stack[i] ==='string'){
+        nbOfItemInTheStack++;
+        valueindex = i;
+      }
+      else{break;}
+    }
+    return [nbOfItemInTheStack, valueindex]
   }
 }
 
